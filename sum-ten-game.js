@@ -95,6 +95,24 @@ export function applySelection(state, selection) {
   };
 }
 
+export function hasAnyValidSelection(board) {
+  const prefix = buildPrefixSum(board);
+
+  for (let startRow = 0; startRow < BOARD_ROWS; startRow += 1) {
+    for (let endRow = startRow; endRow < BOARD_ROWS; endRow += 1) {
+      for (let startColumn = 0; startColumn < BOARD_COLUMNS; startColumn += 1) {
+        for (let endColumn = startColumn; endColumn < BOARD_COLUMNS; endColumn += 1) {
+          if (getRectangleSum(prefix, startRow, endRow, startColumn, endColumn) === TARGET_SUM) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 export function tick(state) {
   if (state.isRoundOver || state.mode !== GAME_MODES.TIMED) {
     return state;
@@ -148,4 +166,32 @@ export function getCellFromPoint(boardElement, clientX, clientY) {
 
 function randomDigit(random) {
   return Math.floor(random() * 9) + 1;
+}
+
+function buildPrefixSum(board) {
+  const prefix = Array.from({ length: BOARD_ROWS + 1 }, () =>
+    Array(BOARD_COLUMNS + 1).fill(0),
+  );
+
+  for (let row = 0; row < BOARD_ROWS; row += 1) {
+    for (let column = 0; column < BOARD_COLUMNS; column += 1) {
+      const value = board[row][column].cleared ? 0 : board[row][column].value;
+      prefix[row + 1][column + 1] =
+        value +
+        prefix[row][column + 1] +
+        prefix[row + 1][column] -
+        prefix[row][column];
+    }
+  }
+
+  return prefix;
+}
+
+function getRectangleSum(prefix, startRow, endRow, startColumn, endColumn) {
+  return (
+    prefix[endRow + 1][endColumn + 1] -
+    prefix[startRow][endColumn + 1] -
+    prefix[endRow + 1][startColumn] +
+    prefix[startRow][startColumn]
+  );
 }

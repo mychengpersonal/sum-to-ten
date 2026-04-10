@@ -10,6 +10,7 @@ import {
   createBoard,
   createGameState,
   endRound,
+  hasAnyValidSelection,
   normalizeSelection,
   tick,
 } from "../src/sum-ten-game.js";
@@ -108,4 +109,25 @@ test("practice mode does not tick down and can end manually", () => {
   assert.equal(afterTick.timeLeft, null);
   assert.equal(afterTick.isRoundOver, false);
   assert.equal(afterEnd.isRoundOver, true);
+});
+
+test("detects when the board still has at least one valid rectangle summing to ten", () => {
+  const board = createBoard(() => 0);
+  board[0][0].value = 4;
+  board[0][1].value = 6;
+
+  assert.equal(hasAnyValidSelection(board), true);
+});
+
+test("detects when the board has no remaining valid rectangle", () => {
+  const board = createBoard(() => 0);
+  for (let row = 0; row < board.length; row += 1) {
+    for (let column = 0; column < board[row].length; column += 1) {
+      board[row][column].value = 9;
+    }
+  }
+  board[0][0].cleared = true;
+  board[0][1].cleared = true;
+
+  assert.equal(hasAnyValidSelection(board), false);
 });

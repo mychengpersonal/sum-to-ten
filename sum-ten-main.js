@@ -9,6 +9,7 @@ import {
   createGameState,
   endRound,
   getCellFromPoint,
+  hasAnyValidSelection,
   normalizeSelection,
   tick,
 } from "./sum-ten-game.js";
@@ -167,6 +168,9 @@ boardElement.addEventListener("pointerup", (event) => {
   pointerStartCell = null;
   currentSelection = null;
   boardElement.releasePointerCapture(event.pointerId);
+  if (maybeAutoFinishPracticeRound()) {
+    return;
+  }
   render();
 });
 
@@ -345,6 +349,19 @@ function renderSelectionSummary(analysis) {
 
 function renderResult() {
   finalScoreElement.textContent = String(state.score);
+}
+
+function maybeAutoFinishPracticeRound() {
+  if (!state || state.mode !== GAME_MODES.PRACTICE || state.isRoundOver) {
+    return false;
+  }
+
+  if (hasAnyValidSelection(state.board)) {
+    return false;
+  }
+
+  finishRound();
+  return true;
 }
 
 function syncNicknameInputs(sourceInput = null) {
