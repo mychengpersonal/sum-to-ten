@@ -2,10 +2,156 @@
 <html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="0; url=./sum-ten.html" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>SUM TO TEN</title>
+    <link rel="stylesheet" href="./sum-ten.css" />
   </head>
   <body>
-    <p><a href="./sum-ten.html">前往 SUM TO TEN</a></p>
+    <div class="modal-backdrop" id="nickname-modal" hidden>
+      <section class="modal-card" aria-labelledby="nickname-modal-title" aria-modal="true" role="dialog">
+        <div class="modal-badge">SUM TO TEN</div>
+        <p class="eyebrow">準備開始</p>
+        <h2 class="screen-title" id="nickname-modal-title">輸入暱稱，進入遊戲</h2>
+        <p class="intro">
+          你的暱稱會顯示在個人排行榜上，並自動保存在這個瀏覽器裡。
+        </p>
+        <label class="field-label" for="nickname-input">暱稱</label>
+        <input
+          id="nickname-input"
+          class="text-input"
+          type="text"
+          maxlength="20"
+          placeholder="請輸入你的暱稱"
+          autocomplete="nickname"
+          data-nickname-input
+        />
+        <p class="field-help" id="nickname-help">
+          輸入完成後即可進入首頁，之後打開會自動帶入。
+        </p>
+        <div class="primary-actions">
+          <button type="button" class="primary-button" id="nickname-confirm-button">進入遊戲</button>
+        </div>
+      </section>
+    </div>
+
+    <main class="app shell">
+      <section class="panel screen" id="start-screen" aria-labelledby="start-title">
+        <p class="eyebrow">MVP Demo</p>
+        <h1 id="start-title">SUM TO TEN</h1>
+        <p class="intro">
+          在 17 x 10 的數字方塊中，用滑鼠或手指框選一個矩形區塊。只要區塊內尚未消除的數字加總剛好等於 10，就能一起消掉並累積分數，已經變空的格子也可以直接跨過。
+        </p>
+        <ul class="rule-list">
+          <li>每消掉 1 格得 1 分，滿分 170 分。</li>
+          <li>計時模式為 90 秒，時間到自動結算。</li>
+          <li>練習模式不限時，需要手動結束。</li>
+        </ul>
+
+        <div class="mode-picker" role="radiogroup" aria-label="選擇遊戲模式">
+          <button type="button" class="mode-button is-selected" data-mode-option="timed" aria-pressed="true">
+            計時模式
+          </button>
+          <button type="button" class="mode-button" data-mode-option="practice" aria-pressed="false">
+            練習模式
+          </button>
+        </div>
+
+        <div class="primary-actions">
+          <button type="button" class="primary-button" id="start-button">開始</button>
+        </div>
+
+        <section class="leaderboard-card" aria-labelledby="leaderboard-title-start">
+          <div class="leaderboard-head">
+            <h2 class="leaderboard-title" id="leaderboard-title-start">個人排行榜</h2>
+            <p class="leaderboard-note">每個模式只保留前 10 名</p>
+          </div>
+          <div class="leaderboard-tabs" role="tablist" aria-label="個人排行榜模式">
+            <button type="button" class="mode-button is-selected" data-leaderboard-mode="timed" aria-pressed="true">
+              計時模式
+            </button>
+            <button type="button" class="mode-button" data-leaderboard-mode="practice" aria-pressed="false">
+              練習模式
+            </button>
+          </div>
+          <ol class="leaderboard-list" data-leaderboard-list></ol>
+        </section>
+      </section>
+
+      <section class="panel screen" id="game-screen" hidden aria-labelledby="game-title">
+        <header class="game-header">
+          <div>
+            <p class="eyebrow">目前模式</p>
+            <h2 id="game-title" class="screen-title">計時模式</h2>
+          </div>
+          <div class="status-grid">
+            <div class="status-card">
+              <p class="status-label">分數</p>
+              <p class="status-value" id="score">0</p>
+            </div>
+            <div class="status-card">
+              <p class="status-label">剩餘時間</p>
+              <p class="status-value" id="timer">90</p>
+            </div>
+          </div>
+        </header>
+
+        <p class="selection-summary" id="selection-summary">桌機可拖曳框選；手機與平板點一下起點、再點一下終點。</p>
+
+        <div class="board-shell">
+          <div
+            class="board"
+            id="board"
+            role="grid"
+            aria-label="17 乘 10 數字棋盤"
+          ></div>
+        </div>
+
+        <div class="game-actions">
+          <a class="ghost-button action-link" id="home-button" href="./sum-ten.html">回首頁</a>
+          <button type="button" class="secondary-button" id="end-button" hidden>結束本輪</button>
+          <button type="button" class="ghost-button" id="restart-run-button">重新開始本輪</button>
+        </div>
+      </section>
+
+      <section class="panel screen" id="result-screen" hidden aria-labelledby="result-title">
+        <p class="eyebrow">本輪結算</p>
+        <h2 id="result-title" class="screen-title">遊戲結束</h2>
+        <p class="result-score"><span id="final-score">0</span> / 170 分</p>
+
+        <div class="mode-picker" role="radiogroup" aria-label="選擇下一場模式">
+          <button type="button" class="mode-button is-selected" data-mode-option="timed" aria-pressed="true">
+            計時模式
+          </button>
+          <button type="button" class="mode-button" data-mode-option="practice" aria-pressed="false">
+            練習模式
+          </button>
+        </div>
+
+        <div class="primary-actions">
+          <button type="button" class="primary-button" id="play-again-button">重新開始</button>
+        </div>
+
+        <section class="leaderboard-card" aria-labelledby="leaderboard-title-result">
+          <div class="leaderboard-head">
+            <h2 class="leaderboard-title" id="leaderboard-title-result">個人排行榜</h2>
+            <p class="leaderboard-note">每個模式只保留前 10 名</p>
+          </div>
+          <div class="leaderboard-tabs" role="tablist" aria-label="個人排行榜模式">
+            <button type="button" class="mode-button is-selected" data-leaderboard-mode="timed" aria-pressed="true">
+              計時模式
+            </button>
+            <button type="button" class="mode-button" data-leaderboard-mode="practice" aria-pressed="false">
+              練習模式
+            </button>
+          </div>
+          <ol class="leaderboard-list" data-leaderboard-list></ol>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="./sum-ten-main.js"></script>
   </body>
 </html>
