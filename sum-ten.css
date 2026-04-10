@@ -172,7 +172,7 @@ h1 {
 }
 
 .intro {
-  max-width: none;
+  max-width: 100%;
   margin: 14px 0 0;
 }
 
