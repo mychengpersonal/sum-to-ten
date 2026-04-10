@@ -415,6 +415,9 @@ h1 {
 
 .selection-summary {
   margin: 18px 0 0;
+  min-height: calc(1.6em * 2);
+  display: flex;
+  align-items: flex-start;
 }
 
 .board-shell {
