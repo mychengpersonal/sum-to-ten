@@ -468,3 +468,27 @@ h1 {
     gap: 4px;
   }
 }
+
+.site-credit {
+  position: fixed;
+  right: 18px;
+  bottom: 14px;
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 253, 249, 0.86);
+  border: 1px solid rgba(235, 216, 203, 0.95);
+  color: #7b6256;
+  font-size: 0.82rem;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 30;
+}
+
+@media (max-width: 620px) {
+  .site-credit {
+    right: 12px;
+    bottom: 10px;
+    font-size: 0.76rem;
+  }
+}
