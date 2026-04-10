@@ -190,11 +190,14 @@ boardElement.addEventListener("pointercancel", (event) => {
         return;
       }
 
-      if (
-        event.target === boardElement ||
-        boardElement.contains(event.target) ||
-        (showingGameScreen() && event.cancelable)
-      ) {
+      const isBoardInteraction =
+        event.target === boardElement || boardElement.contains(event.target);
+      const isActiveBoardDrag =
+        activePointerId !== null &&
+        event.cancelable &&
+        showingGameScreen();
+
+      if (isBoardInteraction || isActiveBoardDrag) {
         event.preventDefault();
       }
     },
