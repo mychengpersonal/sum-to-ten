@@ -47,7 +47,7 @@ let selectedLeaderboardMode = GAME_MODES.TIMED;
 let state = null;
 let currentSelection = null;
 let pointerStartCell = null;
-let touchAnchorCell = null;
+let activePointerId = null;
 let roundTimerId = null;
 let nickname = readNickname();
 let personalLeaderboard = readLeaderboard();
@@ -130,13 +130,8 @@ boardElement.addEventListener("pointerdown", (event) => {
     return;
   }
 
-  if (event.pointerType === "touch") {
-    event.preventDefault();
-    handleTouchSelection(cell);
-    return;
-  }
-
   event.preventDefault();
+  activePointerId = event.pointerId;
   pointerStartCell = cell;
   currentSelection = normalizeSelection(cell, cell);
   boardElement.setPointerCapture(event.pointerId);
@@ -144,11 +139,12 @@ boardElement.addEventListener("pointerdown", (event) => {
 });
 
 boardElement.addEventListener("pointermove", (event) => {
-  if (!pointerStartCell || !state || state.isRoundOver) {
-    return;
-  }
-
-  if (event.pointerType === "touch") {
+  if (
+    !pointerStartCell ||
+    !state ||
+    state.isRoundOver ||
+    event.pointerId !== activePointerId
+  ) {
     return;
   }
 
@@ -159,11 +155,7 @@ boardElement.addEventListener("pointermove", (event) => {
 });
 
 boardElement.addEventListener("pointerup", (event) => {
-  if (!pointerStartCell || !state) {
-    return;
-  }
-
-  if (event.pointerType === "touch") {
+  if (!pointerStartCell || !state || event.pointerId !== activePointerId) {
     return;
   }
 
@@ -171,13 +163,19 @@ boardElement.addEventListener("pointerup", (event) => {
   const cell = getCellFromPoint(boardElement, event.clientX, event.clientY) ?? pointerStartCell;
   currentSelection = normalizeSelection(pointerStartCell, cell);
   state = applySelection(state, currentSelection);
+  activePointerId = null;
   pointerStartCell = null;
   currentSelection = null;
   boardElement.releasePointerCapture(event.pointerId);
   render();
 });
 
-boardElement.addEventListener("pointercancel", () => {
+boardElement.addEventListener("pointercancel", (event) => {
+  if (activePointerId !== null && event.pointerId !== activePointerId) {
+    return;
+  }
+
+  activePointerId = null;
   pointerStartCell = null;
   currentSelection = null;
   render();
@@ -192,7 +190,11 @@ boardElement.addEventListener("pointercancel", () => {
         return;
       }
 
-      if (event.target === boardElement || boardElement.contains(event.target)) {
+      if (
+        event.target === boardElement ||
+        boardElement.contains(event.target) ||
+        (showingGameScreen() && event.cancelable)
+      ) {
         event.preventDefault();
       }
     },
@@ -234,7 +236,7 @@ function startRound(mode = selectedMode) {
   state.leaderboardSaved = false;
   currentSelection = null;
   pointerStartCell = null;
-  touchAnchorCell = null;
+  activePointerId = null;
   clearRoundTimer();
   if (mode === GAME_MODES.TIMED) {
     roundTimerId = window.setInterval(() => {
@@ -313,9 +315,7 @@ function renderBoard(analysis) {
 
 function renderSelectionSummary(analysis) {
   if (!currentSelection) {
-    selectionSummaryElement.textContent = touchAnchorCell
-      ? `已選起點 (${touchAnchorCell.column + 1}, ${touchAnchorCell.row + 1})，再點一下終點完成矩形。`
-      : `桌機可拖曳框選；手機與平板點一下起點、再點一下終點。空格可以跨越，讓剩下數字總和剛好等於 ${TARGET_SUM}。`;
+    selectionSummaryElement.textContent = `按住並拖曳框選矩形區塊。空格可以跨越，讓剩下數字總和剛好等於 ${TARGET_SUM}。`;
     return;
   }
 
@@ -338,21 +338,6 @@ function renderSelectionSummary(analysis) {
       ? `，已跨過 ${analysis.clearedCellCount} 個空格`
       : "";
   selectionSummaryElement.textContent = `目前剩餘數字總和 ${analysis.sum}${clearedHint}，還沒湊到 ${TARGET_SUM}。`;
-}
-
-function handleTouchSelection(cell) {
-  if (!touchAnchorCell) {
-    touchAnchorCell = cell;
-    currentSelection = normalizeSelection(cell, cell);
-    render();
-    return;
-  }
-
-  currentSelection = normalizeSelection(touchAnchorCell, cell);
-  state = applySelection(state, currentSelection);
-  touchAnchorCell = null;
-  currentSelection = null;
-  render();
 }
 
 function renderResult() {
