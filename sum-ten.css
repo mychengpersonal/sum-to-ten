@@ -117,6 +117,9 @@ a {
   width: 100%;
   padding: 24px;
 }
+#game-screen {
+  touch-action: none;
+}
 
 #start-screen,
 #result-screen {
@@ -399,6 +402,7 @@ h1 {
     #fff6f1;
   border: 1px solid var(--border);
   touch-action: none;
+  overscroll-behavior: none;
 }
 
 .board {
@@ -408,6 +412,7 @@ h1 {
   gap: 5px;
   touch-action: none;
   user-select: none;
+  overscroll-behavior: none;
 }
 
 .cell {
