@@ -539,6 +539,38 @@ document.addEventListener(
 );
 
 document.addEventListener(
+  "gesturechange",
+  (event) => {
+    event.preventDefault();
+  },
+  { passive: false },
+);
+
+document.addEventListener(
+  "gestureend",
+  (event) => {
+    event.preventDefault();
+  },
+  { passive: false },
+);
+
+document.addEventListener(
+  "dblclick",
+  (event) => {
+    event.preventDefault();
+  },
+  { passive: false },
+);
+
+document.addEventListener(
+  "gesturestart",
+  (event) => {
+    event.preventDefault();
+  },
+  { passive: false },
+);
+
+document.addEventListener(
   "dblclick",
   (event) => {
     event.preventDefault();
