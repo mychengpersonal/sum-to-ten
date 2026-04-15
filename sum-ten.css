@@ -88,6 +88,38 @@ a {
   font: inherit;
 }
 
+.language-switcher {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  display: inline-flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(255, 253, 249, 0.9);
+  border: 1px solid rgba(235, 216, 203, 0.95);
+  box-shadow: 0 8px 24px rgba(121, 74, 51, 0.08);
+  z-index: 40;
+}
+
+.language-button {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.language-button.is-selected {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
 .app {
   width: 100%;
   min-height: 100%;
@@ -511,6 +543,11 @@ h1 {
 }
 
 @media (max-width: 620px) {
+  .language-switcher {
+    top: 10px;
+    right: 10px;
+  }
+
   .site-credit {
     right: 12px;
     bottom: 10px;
