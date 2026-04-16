@@ -1,7 +1,7 @@
 export const BOARD_COLUMNS = 17;
 export const BOARD_ROWS = 10;
 export const TARGET_SUM = 10;
-export const TIMED_DURATION_SECONDS = 120;
+export const TIMED_DURATION_SECONDS = 90;
 export const GAME_MODES = {
   TIMED: "timed",
   PRACTICE: "practice",

@@ -65,8 +65,6 @@ const translations = {
     selectionInvalidBridge: "，已跨過 {count} 個空格",
     leaderboardEmpty: "還沒有紀錄，先來玩一場吧。",
     leaderboardPoints: "{score} 分",
-    modePracticeSummary: "練習模式",
-    modeTimedSummary: "計時模式",
   },
   en: {
     documentTitle: "SUM TO TEN",
@@ -111,8 +109,6 @@ const translations = {
     selectionInvalidBridge: ", crossing {count} empty tile(s)",
     leaderboardEmpty: "No records yet. Play a round first.",
     leaderboardPoints: "{score} pts",
-    modePracticeSummary: "Practice",
-    modeTimedSummary: "Timed",
   },
 };
 
@@ -737,46 +733,6 @@ window.addEventListener("beforeunload", () => {
 
 document.addEventListener(
   "gesturestart",
-  (event) => {
-    event.preventDefault();
-  },
-  { passive: false },
-);
-
-document.addEventListener(
-  "gesturechange",
-  (event) => {
-    event.preventDefault();
-  },
-  { passive: false },
-);
-
-document.addEventListener(
-  "gestureend",
-  (event) => {
-    event.preventDefault();
-  },
-  { passive: false },
-);
-
-document.addEventListener(
-  "dblclick",
-  (event) => {
-    event.preventDefault();
-  },
-  { passive: false },
-);
-
-document.addEventListener(
-  "gesturestart",
-  (event) => {
-    event.preventDefault();
-  },
-  { passive: false },
-);
-
-document.addEventListener(
-  "dblclick",
   (event) => {
     event.preventDefault();
   },
